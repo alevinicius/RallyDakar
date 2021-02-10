@@ -9,7 +9,19 @@ namespace RallyDakar.Dominio.Entidades
         public string Nome { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
-        public ICollection<Equipe> Equipes { get; set; }        
+        public ICollection<Equipe> Equipes { get; set; }
+
+        public void AdicionarEquipe(Equipe equipe)
+        {
+            //pré-condições
+            if(equipe != null)
+            {
+                if(!string.IsNullOrEmpty(equipe.Nome)){
+                    Equipes.Add(equipe);
+                }
+            }
+            
+        }
 
     }
 }
