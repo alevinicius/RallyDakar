@@ -33,11 +33,7 @@ namespace RallyDakar.Dominio.Testes
                 Nome = "EquipeTeste2"
             };
 
-            equipe3 = new Equipe
-            {
-                Id = 3,
-                Nome = "EquipeTeste3"
-            };
+            equipe3 = null
 
             temporada.AdicionarEquipe(equipe1);
             temporada.AdicionarEquipe(equipe2);
