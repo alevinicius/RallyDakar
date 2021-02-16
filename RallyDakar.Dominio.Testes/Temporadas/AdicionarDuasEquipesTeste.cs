@@ -1,8 +1,8 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RallyDakar.Dominio.Entidades;
 using System.Linq;
 
-namespace RallyDakar.Dominio.Testes
+namespace RallyDakar.Dominio.Testes.Temporadas
 {
     [TestClass]
     public class AdicionarDuasEquipesTeste
@@ -15,33 +15,27 @@ namespace RallyDakar.Dominio.Testes
         [TestInitialize]
         public void Initialize()
         {
-            temporada = new Temporada
-            {
-                Id = 1,
-                Nome = "Temporada2020"
-            };
+            temporada = new Temporada();
+            temporada.Id = 1;
+            temporada.Nome = "Temporada2020";
 
-            equipe1 = new Equipe
-            {
-                Id = 1,
-                Nome = "EquipeTeste1"
-            };
+            equipe1 = new Equipe();
+            equipe1.Id = 1;
+            equipe1.Nome = "EquipeTeste1";
+            equipe1.CodigoIdentificador = "CodTeste";
 
-            equipe2 = new Equipe
-            {
-                Id = 2,
-                Nome = "EquipeTeste2"
-            };
+            equipe2 = new Equipe();
+            equipe2.Id = 2;
+            equipe2.Nome = "EquipeTeste2";
+            equipe2.CodigoIdentificador = "CodTeste";
 
-            equipe3 = new Equipe
-            {
-                Id = 3,
-                Nome = "EquipeTeste3"
-            };
+            equipe3 = null;
+            
 
             temporada.AdicionarEquipe(equipe1);
             temporada.AdicionarEquipe(equipe2);
             temporada.AdicionarEquipe(equipe3);
+
         }
 
         [TestMethod]
