@@ -33,10 +33,16 @@ namespace RallyDakar.API
             //... a instância do DBContext dura até acabar a requisição
             services.AddDbContext<RallyDBContexto>(opt => opt.UseInMemoryDatabase("RallyDB"),
                 ServiceLifetime.Scoped);
-            
+                        
             services.AddControllers();
 
-            services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();
+            services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();        
+            
+            //IMPORTANTE, APRENDIDO DURANTE A AULA EM UMA DEPURAÇÃO
+            //Durante a depuração constatei que o caminho feito da criação das instâncias é feita nessa ordem:
+            //DBContext -> Repositório -> Controller
+            //O Controller depende que já exista um Repositório construído/instanciado, 
+            //este por sua vez depende que já exista o DBContext construído/instanciado
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
