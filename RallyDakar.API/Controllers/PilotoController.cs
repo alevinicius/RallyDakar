@@ -22,6 +22,15 @@ namespace RallyDakar.API.Controllers
         [HttpGet]
         public IActionResult ObterTodos()
         {
+            //var pilotos = new List<Piloto>();
+            //var piloto = new Piloto();
+            //piloto.Id = 1;
+            //piloto.Nome = "Piloto Teste";
+            //piloto.EquipeId = 0;
+            //piloto.Equipe = null;
+            //pilotos.Add(piloto);
+            //return Ok(pilotos);
+
             return Ok(_pilotoRepositorio.ObterTodos());
         }
 
