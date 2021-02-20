@@ -39,6 +39,24 @@ namespace RallyDakar.API.Controllers
         {
             _pilotoRepositorio.Adicionar(piloto);
             return Ok();
+        } 
+
+        [HttpPut]
+        public IActionResult AtualizarPiloto([FromBody] Piloto piloto)
+        {
+            return Ok();
+        }
+
+        [HttpPatch]
+        public IActionResult AtualizarParcialmentePiloto([FromBody] Piloto piloto)
+        {
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletarPiloto(int Id)
+        {
+            return Ok();
         }
     }
 }
