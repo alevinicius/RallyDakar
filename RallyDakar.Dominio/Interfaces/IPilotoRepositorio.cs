@@ -9,5 +9,7 @@ namespace RallyDakar.Dominio.Interfaces
     {
         void Adicionar(Piloto piloto);
         IEnumerable<Piloto> ObterTodos();
+        Piloto Obter(int pilotoId);
+        bool Existe(int pilotoId);
     }
 }

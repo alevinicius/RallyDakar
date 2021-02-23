@@ -22,16 +22,26 @@ namespace RallyDakar.API.Controllers
         [HttpGet]
         public IActionResult ObterTodos()
         {
-            //var pilotos = new List<Piloto>();
-            //var piloto = new Piloto();
-            //piloto.Id = 1;
-            //piloto.Nome = "Piloto Teste";
-            //piloto.EquipeId = 0;
-            //piloto.Equipe = null;
-            //pilotos.Add(piloto);
-            //return Ok(pilotos);
+            try {
 
-            return Ok(_pilotoRepositorio.ObterTodos());
+                var pilotos = _pilotoRepositorio.ObterTodos();
+                if (!pilotos.Any())
+                {
+                    return NotFound();
+                }
+
+                return Ok(pilotos);
+            }catch//(Exception e)
+            {
+                //Exemplo de como salvar a mensagem de erro em um log, caso o tenha.
+                //_logger.Info(e.ToString());
+
+                //Mandar mensagem genérica para o cliente, caso seja empresa externa ou cliente final
+                //return BadRequest("Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
+
+                //Também posso colocar o statuscode diretamente, passando o número e a mensagem.
+                return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
+            }
         }
 
         [HttpPost]
