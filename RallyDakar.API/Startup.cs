@@ -36,7 +36,7 @@ namespace RallyDakar.API
                         
             services.AddControllers();
 
-            services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();        
+            services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();                  
             
             //IMPORTANTE, APRENDIDO DURANTE A AULA EM UMA DEPURAÇÃO
             //Durante a depuração constatei que o caminho feito da criação das instâncias é feita nessa ordem:

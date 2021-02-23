@@ -1,48 +1,70 @@
-﻿using RallyDakar.Dominio.DBContexto;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using RallyDakar.Dominio.DBContexto;
 using RallyDakar.Dominio.Entidades;
 using RallyDakar.Dominio.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace RallyDakar.Dominio.Repositorios
 {
     public class PilotoRepositorio : IPilotoRepositorio
     {
-        private readonly RallyDBContexto _rallyDBContexto;
-
-        public PilotoRepositorio(RallyDBContexto rallyDBContexto)
+        private readonly RallyDBContexto _rallyDbContexto;
+        public PilotoRepositorio(RallyDBContexto rallyDbContexto)
         {
-            _rallyDBContexto = rallyDBContexto;
+            _rallyDbContexto = rallyDbContexto;
         }
 
         public void Adicionar(Piloto piloto)
         {
-            _rallyDBContexto.Pilotos.Add(piloto);
-            _rallyDBContexto.SaveChanges();
+            _rallyDbContexto.Pilotos.Add(piloto);
+            _rallyDbContexto.SaveChanges();
+        }
+
+        public void Atualizar(Piloto piloto)
+        {
+
+            //O objeto piloto foi recebido pelo cliente, portanto se trata de uma instância não gerenciada...
+            //...pelo EntityFrameweork, por ser apenas uma instância que está em memória que veio de fora
+            //O Attach faz com que a instância passe a ser gerenciada pelo EntityFramework
+            //Sem o Attach o EntityFramework entenderia como um objeto a ser adicionado ao executar o SaveChanges
+            _rallyDbContexto.Attach(piloto);
+
+            //Está mudando o estado de todas as propriedades da instância para "Modified"
+            _rallyDbContexto.Entry(piloto).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            
+            _rallyDbContexto.SaveChanges();
+        }
+
+        public void Deletar(Piloto piloto)
+        {
+            _rallyDbContexto.Pilotos.Remove(piloto);
+            _rallyDbContexto.SaveChanges();
         }
 
         public bool Existe(int pilotoId)
         {
-            return _rallyDBContexto.Pilotos.Any(p => p.Id == pilotoId);
+            return _rallyDbContexto.Pilotos.Any(p => p.Id == pilotoId);
         }
 
         public Piloto Obter(int pilotoId)
         {
-            return _rallyDBContexto.Pilotos.FirstOrDefault(p => p.Id == pilotoId);
+            return _rallyDbContexto.Pilotos.FirstOrDefault(p => p.Id == pilotoId);
         }
 
         public IEnumerable<Piloto> ObterTodos()
         {
-            return _rallyDBContexto.Pilotos.ToList();
+            return _rallyDbContexto.Pilotos.ToList();
         }
+
 
         public IEnumerable<Piloto> ObterTodosPilotos(string nome)
         {
-            return _rallyDBContexto.Pilotos
+            return _rallyDbContexto.Pilotos
                 .Where(p => p.Nome.Contains(nome))
                 .ToList();
         }
+
+
     }
 }

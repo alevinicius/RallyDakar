@@ -43,30 +43,113 @@ namespace RallyDakar.API.Controllers
                 return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
             }
         }
+        
+        //Espera um Id, e "Name = Obter" é o nome da rota, que é usado no método Post para..."
+        //...redirecionar à este método
+        [HttpGet("{id}", Name = "Obter")]
+        public IActionResult Obter(int id)
+        {
+            try
+            {
+                var piloto = _pilotoRepositorio.Obter(id);
+                if (piloto == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(piloto);
+            }
+            catch//(Exception e)
+            {
+                //_logger.info(e.ToString())
+                return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
+            }
+        }
 
         [HttpPost]
         public IActionResult AdicionarPiloto([FromBody]Piloto piloto)
         {
-            _pilotoRepositorio.Adicionar(piloto);
-            return Ok();
+            try
+            {
+                if (_pilotoRepositorio.Existe(piloto.Id))
+                {
+                    return StatusCode(409, "Já existe piloto com a mesma identificação");
+                }
+
+                _pilotoRepositorio.Adicionar(piloto);
+               
+                //O CreatedAtRoute em questão faz:
+                //Informa que o recurso foi criado (StatusCode 201)
+                //Redireciona para o método cujo nome da rota é "Obter"
+                //Passa como parâmetro o id do piloto adicionado
+                //Envia também o objeto piloto                
+                return CreatedAtRoute("Obter", new { id = piloto.Id }, piloto);
+            }
+            catch//(Exception e)
+            {
+                //_logger.info(e.ToString())
+                return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
+            }
         } 
 
         [HttpPut]
-        public IActionResult AtualizarPiloto([FromBody] Piloto piloto)
+        public IActionResult Atualizar([FromBody] Piloto piloto)
         {
-            return Ok();
+            try
+            {
+                if (!_pilotoRepositorio.Existe(piloto.Id))
+                {
+                    return NotFound();
+                }
+
+                _pilotoRepositorio.Atualizar(piloto);
+
+                //StatusCode 204
+                //Não retorna nada além do StatusCode
+                return NoContent();
+            }
+            catch//(Exception e)
+            {
+                //_logger.info(e.ToString())
+                return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
+            }
         }
 
         [HttpPatch]
-        public IActionResult AtualizarParcialmentePiloto([FromBody] Piloto piloto)
+        public IActionResult AtualizarParcialmente([FromBody] Piloto piloto)
         {
-            return Ok();
+            try
+            {
+                return Ok();
+            }
+            catch//(Exception e)
+            {
+                //_logger.info(e.ToString())
+                return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletarPiloto(int Id)
+        public IActionResult Deletar(int id)
         {
-            return Ok();
+            try
+            {
+                var piloto = _pilotoRepositorio.Obter(id);
+
+                if (piloto == null)
+                {
+                    return NotFound();
+                }
+                
+                _pilotoRepositorio.Deletar(piloto);
+
+                return NoContent();
+            }
+            catch//(Exception e)
+            {
+                //_logger.info(e.ToString())
+                return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
+            }
         }
     }
 }
