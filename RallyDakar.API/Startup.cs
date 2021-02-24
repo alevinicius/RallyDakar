@@ -34,7 +34,11 @@ namespace RallyDakar.API
             services.AddDbContext<RallyDBContexto>(opt => opt.UseInMemoryDatabase("RallyDB"),
                 ServiceLifetime.Scoped);
                         
-            services.AddControllers();
+            //No serviço de Controller, adicionado o serviço do Newtonsoftjson, baixado no pacotes NUGET, da microsoft
+            //junto também foi baixado o jsonpatch da Microsoft
+            //creio que assim o controller vai ter acesso aos recursos do newtonsoftjson
+            services.AddControllers()
+                    .AddNewtonsoftJson();
 
             services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();                  
             

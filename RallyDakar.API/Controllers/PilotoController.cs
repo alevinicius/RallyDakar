@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using RallyDakar.Dominio.Entidades;
 using RallyDakar.Dominio.Interfaces;
 using System;
@@ -14,7 +15,7 @@ namespace RallyDakar.API.Controllers
     {
         readonly IPilotoRepositorio _pilotoRepositorio;
 
-        public PilotoController ( IPilotoRepositorio pilotoRepositorio)
+        public PilotoController(IPilotoRepositorio pilotoRepositorio)
         {
             _pilotoRepositorio = pilotoRepositorio;
         }
@@ -31,7 +32,7 @@ namespace RallyDakar.API.Controllers
                 }
 
                 return Ok(pilotos);
-            }catch//(Exception e)
+            } catch//(Exception e)
             {
                 //Exemplo de como salvar a mensagem de erro em um log, caso o tenha.
                 //_logger.Info(e.ToString());
@@ -43,7 +44,7 @@ namespace RallyDakar.API.Controllers
                 return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
             }
         }
-        
+
         //Espera um Id, e "Name = Obter" é o nome da rota, que é usado no método Post para..."
         //...redirecionar à este método
         [HttpGet("{id}", Name = "Obter")]
@@ -67,7 +68,7 @@ namespace RallyDakar.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AdicionarPiloto([FromBody]Piloto piloto)
+        public IActionResult AdicionarPiloto([FromBody] Piloto piloto)
         {
             try
             {
@@ -77,7 +78,7 @@ namespace RallyDakar.API.Controllers
                 }
 
                 _pilotoRepositorio.Adicionar(piloto);
-               
+
                 //O CreatedAtRoute em questão faz:
                 //Informa que o recurso foi criado (StatusCode 201)
                 //Redireciona para o método cujo nome da rota é "Obter"
@@ -90,7 +91,7 @@ namespace RallyDakar.API.Controllers
                 //_logger.info(e.ToString())
                 return StatusCode(500, "Ocorreu um erro interno no sistema. Por favor entre em contato com o suporte");
             }
-        } 
+        }
 
         [HttpPut]
         public IActionResult Atualizar([FromBody] Piloto piloto)
@@ -115,12 +116,45 @@ namespace RallyDakar.API.Controllers
             }
         }
 
-        [HttpPatch]
-        public IActionResult AtualizarParcialmente([FromBody] Piloto piloto)
+        //Conforme pode ver na declaração, está sendo utilizado recurso do pacote JsonPatch, adicionado ao projeto RallyDakar.API pelo...
+        //...gerenciador de pacotes NUGET
+        //Exemplo de json recebido para atualizar o nome e o sobrenome de um piloto, percebe-se que é uma lista com 2 elementos, uma pra cada campo:
+        /*                
+    [
+        {
+            "op":"replace",
+            "path": "/Nome",
+            "value":"Fátima Angélica"
+        },
+        {
+            "op":"replace",
+            "path": "/sobreNome",
+            "value":"Aranha"
+        }        
+    ]
+         */
+        //"op" se refere a operação a ser realizada, que no caso é "replace", ou seja, substituição do valor
+        //"path" se refere ao campo que sofrerá o replace (terá o valor substituido), deve ser escrito após a barra conforme o exemplo.
+        //"value" se refere ao valor que será colocado no campo
+        //O id da entidade a ser atualizada deve ser enviada junto
+        [HttpPatch("{id}")]
+        public IActionResult AtualizarParcialmente(int id, [FromBody] JsonPatchDocument<Piloto> patchPiloto)
         {
             try
             {
-                return Ok();
+                if (!_pilotoRepositorio.Existe(id))
+                {
+                    return NotFound();
+                }
+
+                var piloto = _pilotoRepositorio.Obter(id);
+                
+                //Os dados atualizados que estão no patchPiloto serão atualizados no objeto piloto
+                patchPiloto.ApplyTo(piloto);
+
+                _pilotoRepositorio.Atualizar(piloto);
+
+                return NoContent();
             }
             catch//(Exception e)
             {
