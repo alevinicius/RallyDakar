@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -40,13 +41,16 @@ namespace RallyDakar.API
             services.AddControllers()
                     .AddNewtonsoftJson();
 
-            services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();                  
-            
+            services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();
             //IMPORTANTE, APRENDIDO DURANTE A AULA EM UMA DEPURAÇÃO
             //Durante a depuração constatei que o caminho feito da criação das instâncias é feita nessa ordem:
             //DBContext -> Repositório -> Controller
             //O Controller depende que já exista um Repositório construído/instanciado, 
             //este por sua vez depende que já exista o DBContext construído/instanciado
+
+
+            //Passa a referência de todos os compilados que pertencem ao domínio para o AutoMapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
