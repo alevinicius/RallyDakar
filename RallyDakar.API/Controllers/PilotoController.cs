@@ -34,7 +34,9 @@ namespace RallyDakar.API.Controllers
                     return NotFound();
                 }
 
-                return Ok(piloto);
+                var pilotoModeloRetorno = _mapper.Map<PilotoModelo>(piloto);
+
+                return Ok(pilotoModeloRetorno);
             }
             catch//(Exception e)
             {
@@ -50,7 +52,6 @@ namespace RallyDakar.API.Controllers
             {
                 //Cria o objeto piloto e passa os dados de forma igual o do objeto pilotoModelo
                 //Isso é usado para não expor a entidade piloto, ao invés disso ele é substituído por um modelo
-
                 var piloto = _mapper.Map<Piloto>(pilotoModelo);
 
                 if (_pilotoRepositorio.Existe(piloto.Id))
@@ -60,12 +61,16 @@ namespace RallyDakar.API.Controllers
 
                 _pilotoRepositorio.Adicionar(piloto);
 
+                
+                //converte objeto da classe Piloto em objeto da classe PilotoModelo, é o oposto do que é feito no início do método
+                var pilotoModeloRetorno = _mapper.Map<PilotoModelo>(piloto);
+
                 //O CreatedAtRoute em questão faz:
                 //Informa que o recurso foi criado (StatusCode 201)
                 //Redireciona para o método cujo nome da rota é "Obter"
                 //Passa como parâmetro o id do piloto adicionado
-                //Envia também o objeto piloto                
-                return CreatedAtRoute("Obter", new { id = piloto.Id }, piloto);
+                //Envia também o objeto piloto              
+                return CreatedAtRoute("Obter", new { id = piloto.Id }, pilotoModeloRetorno);
             }
             catch//(Exception e)
             {
@@ -75,14 +80,16 @@ namespace RallyDakar.API.Controllers
         }
 
         [HttpPut]
-        public IActionResult Atualizar([FromBody] Piloto piloto)
+        public IActionResult Atualizar([FromBody] PilotoModelo pilotoModelo)
         {
             try
             {
-                if (!_pilotoRepositorio.Existe(piloto.Id))
+                if (!_pilotoRepositorio.Existe(pilotoModelo.Id))
                 {
                     return NotFound();
                 }
+
+                var piloto = _mapper.Map<Piloto>(pilotoModelo);
 
                 _pilotoRepositorio.Atualizar(piloto);
 
