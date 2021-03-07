@@ -126,7 +126,7 @@ namespace RallyDakar.API.Controllers
         //"value" se refere ao valor que será colocado no campo
         //O id da entidade a ser atualizada deve ser enviada junto
         [HttpPatch("{id}")]
-        public IActionResult AtualizarParcialmente(int id, [FromBody] JsonPatchDocument<Piloto> patchPiloto)
+        public IActionResult AtualizarParcialmente(int id, [FromBody] JsonPatchDocument<PilotoModelo> patchPilotoModelo)
         {
             try
             {
@@ -136,10 +136,15 @@ namespace RallyDakar.API.Controllers
                 }
 
                 var piloto = _pilotoRepositorio.Obter(id);
-                
+                var pilotoModelo = _mapper.Map<PilotoModelo>(piloto);
+               
                 //Os dados atualizados que estão no patchPiloto serão atualizados no objeto piloto
-                patchPiloto.ApplyTo(piloto);
+                patchPilotoModelo.ApplyTo(pilotoModelo);
 
+                //Esse comando do Mapper não instancia uma nova entidade, ele usa a entidade já existente de piloto
+                //Isso é diferente do comando que utilizaria <Piloto>(pilotoModelo)
+                piloto = _mapper.Map(pilotoModelo, piloto);
+                
                 _pilotoRepositorio.Atualizar(piloto);
 
                 return NoContent();
