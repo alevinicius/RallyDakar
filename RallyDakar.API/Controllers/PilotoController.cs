@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RallyDakar.API.Modelo;
 using RallyDakar.Dominio.Entidades;
 using RallyDakar.Dominio.Interfaces;
-using System.Linq;
 
 namespace RallyDakar.API.Controllers
 {
@@ -14,11 +14,13 @@ namespace RallyDakar.API.Controllers
     {
         private readonly IPilotoRepositorio _pilotoRepositorio;
         private readonly IMapper _mapper;
+        private readonly ILogger<PilotoController> _logger;
 
-        public PilotoController(IPilotoRepositorio pilotoRepositorio, IMapper mapper)
+        public PilotoController(IPilotoRepositorio pilotoRepositorio, IMapper mapper, ILogger<PilotoController> logger)
         {
             _pilotoRepositorio = pilotoRepositorio;
             _mapper = mapper;
+            _logger = logger;
         }
 
         //Espera um Id, e "Name = Obter" é o nome da rota, que é usado no método Post para..."
@@ -50,6 +52,9 @@ namespace RallyDakar.API.Controllers
         {
             try
             {
+                //Adiciona informação ao Log
+                _logger.LogInformation("Adicionando um piloto novo");
+
                 //Cria o objeto piloto e passa os dados de forma igual o do objeto pilotoModelo
                 //Isso é usado para não expor a entidade piloto, ao invés disso ele é substituído por um modelo
                 var piloto = _mapper.Map<Piloto>(pilotoModelo);

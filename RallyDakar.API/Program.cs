@@ -19,15 +19,29 @@ namespace RallyDakar.API
                 .ConfigureNLog("nlog.config")
                 .GetCurrentClassLogger();
 
+            //Colocado pra gerar log na inicialização do aplicativo, inclusive em caso de erro
             logger.Info("Iniciando o aplicativo");
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "A aplicação parou de rodar");
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            };
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                    .UseStartup<Startup>()
+                    .UseNLog(); //Colocado pra utilizar o NLog
                 });
     }
 }
