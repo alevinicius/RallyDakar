@@ -12,7 +12,8 @@ namespace RallyDakar.Dominio.DBContext
     {
         public static void CargaInicial(IServiceProvider serviceProvider)
         {
-            using (var context = new RallyDBContexto(serviceProvider.GetRequiredService<DbContextOptions<RallyDBContexto>>()))
+            using (var context = new RallyDBContexto(serviceProvider
+                .GetRequiredService<DbContextOptions<RallyDBContexto>>()))
             {
                 var temporada = new Temporada();
                 temporada.Id = 1;

@@ -1,13 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NLog.Web;
+using RallyDakar.Dominio.DBContext;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace RallyDakar.API
 {
     public class Program
@@ -23,7 +19,21 @@ namespace RallyDakar.API
             logger.Info("Iniciando o aplicativo");
             try
             {
-                CreateHostBuilder(args).Build().Run();
+                //CreateHostBuilder(args).Build().Run();
+
+                //O Build() cria o servidor embutido no processo do AspNetCore, antes de colocar no IIS
+                var host = CreateHostBuilder(args).Build();
+
+                //O bloco "using" serve para criar um objeto em seu início que é destruído automaticamente ao finalizar o bloco.
+                //no caso a variável em questão é "scope"
+                using (var scope = host.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    BaseDados.CargaInicial(services);
+                }
+
+                //Coloca o servidor em execução
+                host.Run();
             }
             catch (Exception e)
             {
