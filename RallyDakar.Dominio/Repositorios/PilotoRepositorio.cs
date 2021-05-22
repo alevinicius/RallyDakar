@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Internal;
-using RallyDakar.Dominio.DBContexto;
+using RallyDakar.Dominio.DbContexto;
 using RallyDakar.Dominio.Entidades;
 using RallyDakar.Dominio.Interfaces;
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ namespace RallyDakar.Dominio.Repositorios
 {
     public class PilotoRepositorio : IPilotoRepositorio
     {
-        private readonly RallyDBContexto _rallyDbContexto;
-        public PilotoRepositorio(RallyDBContexto rallyDbContexto)
+        private readonly RallyDbContexto _rallyDbContexto;
+        public PilotoRepositorio(RallyDbContexto rallyDbContexto)
         {
             _rallyDbContexto = rallyDbContexto;
         }

@@ -13,7 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Servicos\" />
+    <Compile Remove="DBContext\**" />
+    <Compile Remove="Servicos\**" />
+    <EmbeddedResource Remove="DBContext\**" />
+    <EmbeddedResource Remove="Servicos\**" />
+    <None Remove="DBContext\**" />
+    <None Remove="Servicos\**" />
   </ItemGroup>
 
   <ItemGroup>

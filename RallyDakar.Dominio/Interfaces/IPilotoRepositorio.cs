@@ -1,7 +1,5 @@
 ﻿using RallyDakar.Dominio.Entidades;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RallyDakar.Dominio.Interfaces
 {
@@ -13,7 +11,5 @@ namespace RallyDakar.Dominio.Interfaces
         bool Existe(int pilotoId);
         void Atualizar(Piloto piloto);
         void Deletar(Piloto piloto);
-
-        //bool Existe(Piloto piloto);
     }
 }

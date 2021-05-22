@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RallyDakar.Dominio.DBContexto;
+using RallyDakar.Dominio.DbContexto;
 using RallyDakar.Dominio.Interfaces;
 using RallyDakar.Dominio.Repositorios;
 using System;
@@ -32,7 +32,8 @@ namespace RallyDakar.API
             //Registro a classe que herda do DBContext utilizando o mecanismo de inversão de dependência
             //Em "ServiceLifetime.Scoped" é definido o tempo de vida do DBContext, atrelado ao escopo, de forma que...
             //... a instância do DBContext dura até acabar a requisição
-            services.AddDbContext<RallyDBContexto>(opt => opt.UseInMemoryDatabase("RallyDB"),
+            services.AddDbContext<RallyDbContexto>(opt => opt.UseInMemoryDatabase("RallyDB"),
+                ServiceLifetime.Scoped,
                 ServiceLifetime.Scoped);
                         
             //No serviço de Controller, adicionado o serviço do Newtonsoftjson, baixado no pacotes NUGET, da microsoft
@@ -42,6 +43,9 @@ namespace RallyDakar.API
                     .AddNewtonsoftJson();
 
             services.AddScoped<IPilotoRepositorio, PilotoRepositorio>();
+            services.AddScoped<ITelemetriaRepositorio, TelemetriaRepositorio>();
+            services.AddScoped<IEquipeRepositorio , EquipeRepositorio>();
+
             //IMPORTANTE, APRENDIDO DURANTE A AULA EM UMA DEPURAÇÃO
             //Durante a depuração constatei que o caminho feito da criação das instâncias é feita nessa ordem:
             //DBContext -> Repositório -> Controller

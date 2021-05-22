@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Web;
-using RallyDakar.Dominio.DBContext;
+using RallyDakar.Dominio.DbContexto;
 using System;
 namespace RallyDakar.API
 {
@@ -37,7 +37,7 @@ namespace RallyDakar.API
             }
             catch (Exception e)
             {
-                logger.Error(e, "A aplicação parou de rodar");
+                logger.Error(e.Message, "A aplicação parou de rodar");
             }
             finally
             {
